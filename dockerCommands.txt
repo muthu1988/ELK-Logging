@@ -1,0 +1,7 @@
+docker run --name localelasticsearch -d -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.2.2
+
+docker run --name localkibana --link localelasticsearch:elasticsearch -p 5601:5601 -d docker.elastic.co/kibana/kibana:6.2.2
+
+docker run --name locallogstash -d -p 5000:5000 -v C:/Users/mkumaran/myws/elk/logstash.conf:/usr/share/logstash/pipeline/logstash.conf -e 'xpack.monitoring.enabledack.monitoring.elasticsearch.url=http://127.0.0.1:9200' docker.elastic.co/logstash/logstash:6.2.2
+
+docker run --log-driver syslog --log-opt syslog-address=tcp://localhost:5000 -d -p 7072:7072 --name logsapp springredis
