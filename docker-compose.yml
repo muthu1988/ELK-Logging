@@ -1,0 +1,26 @@
+version: '3'
+services:
+  elasticsearch:
+    container_name: localelasticsearch
+    environment: 
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    image: "docker.elastic.co/elasticsearch/elasticsearch:6.2.2"
+  kibana:
+    container_name: localkibana
+    links: 
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    image: "docker.elastic.co/kibana/kibana:6.2.2"
+  logstash:
+    container_name: locallogstash
+    ports:
+      - "5000:5000"
+    environment: 
+      - xpack.monitoring.enabledack.monitoring.elasticsearch.url=http://192.168.94.72:9200
+    volumes: 
+      - "C:/Users/mkumaran/myws/elk/logstash.conf:/usr/share/logstash/pipeline/logstash.conf"
+    image: "docker.elastic.co/logstash/logstash:6.2.2"
